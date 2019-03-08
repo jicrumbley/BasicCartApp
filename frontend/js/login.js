@@ -1,6 +1,3 @@
-let Username = "";
-
-
 function checkLogin(){
     document.getElementById("error").innerHTML = "";
     let un = document.getElementById("un").value;
@@ -14,7 +11,6 @@ function checkLogin(){
         if(req.readyState == 4 && req.status == 200){
             if(req.responseText == "true"){
                 console.log(un);
-                Username = un;
                 window.location.href = "../pages/welcome.html";
             }
             else {
@@ -28,7 +24,44 @@ function checkLogin(){
     
 }
 
-function getUsername(){
-    console.log(Username)
-    return Username
+function getLoggedInUser(){
+    let user = "";
+    let url = "http://localhost:8090/login/getUser";
+
+    let req = new XMLHttpRequest();
+    req.responseType = "text";
+    req.onreadystatechange = () => {
+        if(req.readyState == 4 && req.status == 200){
+            if(req.responseText == "false"){
+                window.location.href = "../pages/index.html";
+            }
+            else
+            {
+                console.log(req.responseText)
+                user = req.responseText;
+                document.getElementById("welcome").innerHTML = "Welcome, " + user +"!"               
+            }
+        }
+    }
+    req.open("GET", url);
+    req.send();
+    
+}
+
+function logout(){
+    console.log("Logout clicked");
+    let url = "http://localhost:8090/login/logout";
+    let req = new XMLHttpRequest();
+    req.responseType = "text";
+    req.onreadystatechange = () => {
+        if(req.readyState == 4 && req.status == 200){
+            if(req.responseText == "true"){
+                window.location.href = "../pages/index.html";
+            }
+        }
+    }
+
+    req.open("POST", url);
+    req.send();
+
 }
